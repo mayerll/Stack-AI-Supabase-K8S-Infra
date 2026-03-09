@@ -1,0 +1,34 @@
+
+# Disable internal Postgres, use RDS
+postgresql:
+  enabled: false
+
+externalDb:
+  host: "YOUR_RDS_ENDPOINT_HERE"
+  user: "supabase_admin"
+  database: "postgres"
+  port: 5432
+
+# Secrets Management (Integration with External Secrets Operator)
+db:
+  existingSecret: "supabase-db-secret"
+  secretKey: "password"
+
+# Scaling & High Availability
+postgrest:
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+
