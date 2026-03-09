@@ -5,5 +5,5 @@ cd terraform
 terraform init
 terraform apply -auto-approve
 # Sync EKS credentials
-aws eks update-kubeconfig --name supabase-eks --region us-east-1
+aws eks update-kubeconfig --name supabase-eks --region us-west-2
 
