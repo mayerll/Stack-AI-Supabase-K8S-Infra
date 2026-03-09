@@ -1,4 +1,28 @@
 
+resource "aws_security_group" "rds_sg" {
+  name        = "supabase-rds-sg"
+  description = "Security group for Supabase RDS"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # adjust for your security requirements
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "supabase-rds-sg"
+  }
+}
+
 resource "aws_db_instance" "supabase_db" {
   identifier        = "supabase-prod-db"
   allocated_storage = 20

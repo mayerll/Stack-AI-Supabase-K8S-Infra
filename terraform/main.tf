@@ -18,21 +18,21 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.0"
+  version = "~> 20.0" # v20+ supports AWS provider v5
 
   cluster_name    = "supabase-eks"
   cluster_version = "1.28"
 
-  vpc_id                         = module.vpc.vpc_id
-  subnet_ids                     = module.vpc.private_subnets
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
   cluster_endpoint_public_access = true
 
   eks_managed_node_groups = {
     general = {
       instance_types = ["t3.medium"]
-      min_size     = 2
-      max_size     = 5
-      desired_size = 2
+      min_size       = 2
+      max_size       = 5
+      desired_size   = 2
     }
   }
 }

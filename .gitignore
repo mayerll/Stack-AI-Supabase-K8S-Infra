@@ -1,0 +1,26 @@
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Override variables with secrets
+*.tfvars
+secrets.tf
+
+# Local IDE / system files
+*.swp
+*.swo
+*.DS_Store
+*.log
+
+# Kubernetes / Helm
+*.yaml~
+*.bak
+helm/*.tgz
+
+# Scripts backup
+scripts/*.bak
+
+# OS-specific
+Thumbs.db
