@@ -49,7 +49,7 @@ $ aws sts get-caller-identity
 $ aws configure
 ```
 
-# Create the EKS Admin User
+#### Create the EKS Admin User
 
 ```bash
 # The Terraform configuration (05-iam.tf) expects this user to exist 
