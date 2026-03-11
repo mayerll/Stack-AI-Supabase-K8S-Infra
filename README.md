@@ -9,26 +9,33 @@ Ensure your local environment is authenticated with the correct AWS Account (905
 ```bash
 # Check current AWS credentials
 env | grep AWS
+```
 
 # Verify identity
+
+```bash
 aws sts get-caller-identity
+```
 
-# Expected Output:
-# {
-#     "UserId": "905921696455",
-#     "Account": "905921696455",
-#     "Arn": "arn:aws:iam::905921696455:root"
-# }
+####  Expected Output:
 
-# If identity is missing or incorrect, run:
+```bash
+aws sts get-caller-identity
+ {
+     "UserId": "905921696455",
+     "Account": "905921696455",
+     "Arn": "arn:aws:iam::905921696455:root"
+ }
+```
+
+####  If identity is missing or incorrect, run:
+```bash
 aws configure
 ```
 
-```bash
-# Verify identity
-aws sts get-caller-identity
+# Create the EKS Admin User
 
-# 1.1 Create the EKS Admin User
+```bash
 # The Terraform configuration (05-iam.tf) expects this user to exist 
 # to grant ClusterAdmin permissions via Access Entries.
 aws iam create-user --user-name eks-admin
