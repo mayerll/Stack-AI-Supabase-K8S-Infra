@@ -166,8 +166,13 @@ $ aws eks update-kubeconfig --region us-west-2 --name prod-stackai-supabase-eks
 # Verify connection
 
 $ kubectl get nodes
+
+$ kubectl get pod -A
+
 ```
 <img width="892" height="99" alt="image" src="https://github.com/user-attachments/assets/1adbe288-1a1c-4173-a5a2-391b200b47b1" />
+
+<img width="1506" height="867" alt="image" src="https://github.com/user-attachments/assets/046bf58b-085d-4206-82eb-24c1e1a3aad1" />
 
 
 #### Access RDS Database
