@@ -3,15 +3,26 @@
 # 1. EKS Cluster Admin Access
 # ==========================================
 # Modern EKS Access Entry (Replaces aws-auth ConfigMap)
+#resource "aws_eks_access_entry" "eks_admin" {
+#  cluster_name      = module.eks.cluster_name
+#  principal_arn     = "arn:aws:iam::${var.aws_account_id}:user/eks-admin"
+#  user_name         = "eks-admin"
+#  type              = "STANDARD"
+#
+#  # CRITICAL: Must wait for the EKS Cluster control plane to be fully 'ACTIVE'
+#  depends_on = [module.eks]
+#}
+#
 resource "aws_eks_access_entry" "eks_admin" {
   cluster_name      = module.eks.cluster_name
-  principal_arn     = "arn:aws:iam::${var.aws_account_id}:user/eks-admin"
-  user_name         = "eks-admin"
+  # Replace with your actual ARN from the command above
+  principal_arn     = "arn:aws:iam::905921696455:root" 
+  user_name         = "admin"
   type              = "STANDARD"
 
-  # CRITICAL: Must wait for the EKS Cluster control plane to be fully 'ACTIVE'
   depends_on = [module.eks]
 }
+
 
 # Grant ClusterAdmin permissions to the entry
 resource "aws_eks_access_policy_association" "eks_admin_policy" {
