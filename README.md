@@ -211,6 +211,9 @@ kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
 # Forward API Gateway (Kong)
 kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
 ```
+
+<img width="1957" height="965" alt="image" src="https://github.com/user-attachments/assets/03f49bd1-9219-4f26-81ce-681c1513c023" />
+
 ## 6. Troubleshooting
 
 ### Handling State Lock Errors
