@@ -2,6 +2,19 @@
 
 A professional Infrastructure as Code (IaC) project using Terraform to deploy a highly available Supabase-style stack on AWS (us-west-2).
 
+## 0. Deployment Workflow
+
+This project follows a branch-driven deployment strategy. Pushing code to the following branches triggers an automatic deployment to their respective environments:
+
+
+| Branch | Environment | Purpose |
+| :--- | :--- | :--- |
+| `main` | **Production** | Live environment for end-users. |
+| `staging` | **Staging** | Pre-production testing and final QA. |
+| `qa` | **QA** | Quality Assurance and integration testing. |
+| `dev` | **Development** | Sandbox for feature testing and dev syncing. |
+
+
 ## 1. Pre-deployment Checks
 
 Ensure your local environment is authenticated with the correct AWS Account (905921696455).
