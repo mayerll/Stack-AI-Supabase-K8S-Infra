@@ -60,7 +60,7 @@ variable "db_storage" {
 variable "eks_version" {
   description = "The desired Kubernetes version for the EKS cluster (e.g., 1.28)."
   type        = string
-  default     = "1.31"
+  default     = "1.30"
 }
 
 variable "eks_instance_type" {
