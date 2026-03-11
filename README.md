@@ -249,7 +249,17 @@ Test if the external ingress is routing traffic to the REST API.
 kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
 
 ```
-#### Authorized Request:
+### Authenticated API Test
+Run the following to verify the API accepts your `anon` key:
+
+1. **Get the key:**
+   ```bash
+   kubectl get secret supabase-jwt -n supabase -o jsonpath='{.data.anonKey}' | base64 --decode
+```
+You will get ANON_KEY key.
+
+<img width="1955" height="84" alt="image" src="https://github.com/user-attachments/assets/dcc31bd2-358d-4a4c-8d77-3549704f769f" />
+
 In a new terminal, run:
 
 ```bash
@@ -257,6 +267,19 @@ curl -i -H "apikey: $ANON_KEY" -H "Authorization: Bearer $ANON_KEY" http://local
 
 ```
 #### Expected Result: HTTP/1.1 200 OK
+<img width="1952" height="928" alt="image" src="https://github.com/user-attachments/assets/d5d51257-f2a7-4332-b06f-e241408c6f20" />
+
+### Access the Studio (Dashboard)
+Your Ingress is configured for the host supabase.local.
+##### Option 1: Using /etc/hosts (Recommended for Ingress test)
+Get your LoadBalancer IP: nslookup <YOUR_AWS_ELB_DNS_NAME>
+Add to your local /etc/hosts: <LB_IP> supabase.local
+Visit: http://supabase.local
+##### Option 2: Port-Forward (Immediate access)
+```bash
+kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
+```
+Visit: http://localhost:8000 and use the credentials (username and password) retrieved before.
 
 #### Access the Studio (Dashboard)
 Your Ingress is configured for the host supabase.local.
@@ -270,6 +293,15 @@ kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
 ```
 
 Visit: http://localhost:8000 and use the credentials retrieved in Step B.
+
+### Service Endpoint Summary
+
+| Service | Internal Secret | Ingress Host |
+| :--- | :--- | :--- |
+| **PostgreSQL** | `supabase-db` | N/A (Internal Only) |
+| **Auth/API** | `supabase-jwt` | `supabase.local/auth` |
+| **Studio UI** | `supabase-dashboard` | `supabase.local` |
+
 ## 6. Troubleshooting
 
 ### Handling State Lock Errors
