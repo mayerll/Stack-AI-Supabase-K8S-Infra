@@ -1,7 +1,7 @@
 
 #!/bin/bash
 set -e
-cd terraform
+cd ../terraform
 terraform init
 terraform apply -auto-approve
 # Sync EKS credentials
