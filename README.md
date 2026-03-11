@@ -201,19 +201,75 @@ $ psql -h <rds_db_endpoint> -U supabase_admin -d postgres
 
 Once the pods are in a `Running` state, follow these steps to verify your deployment.
 
-### A. Quick Access (No DNS Required)
+### Quick Access (No DNS Required)
 Use Kubernetes port-forwarding to access the **Supabase Studio (Dashboard)** immediately on your local machine:
 
 ```bash
 # Forward Studio (Dashboard)
-kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
+$ kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
 
 # Forward API Gateway (Kong)
-kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
+$ kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
 ```
 
 <img width="1957" height="965" alt="image" src="https://github.com/user-attachments/assets/03f49bd1-9219-4f26-81ce-681c1513c023" />
 
+Follow these steps to ensure the database, API gateway, and dashboard are working correctly.
+
+### Database Connectivity
+Verify that the PostgreSQL engine is online and accepting internal queries:
+
+```bash
+$ kubectl exec -it -n supabase supabase-supabase-db-0 -- psql -U postgres -c "SELECT version();"
+```
+<img width="1492" height="145" alt="image" src="https://github.com/user-attachments/assets/3031228b-a68b-4927-b9db-dc2f96a7b6a3" />
+
+### Retrieve API Credentials
+You need the Anon Key to make authorized API requests and the Dashboard credentials to log in to the UI.
+
+```bash
+# 1. Get the Anon JWT Key
+export ANON_KEY=$(kubectl get secret supabase-jwt -n supabase -o jsonpath='{.data.anonKey}' | base64 --decode)
+
+# 2. Get Studio Login Credentials
+export STUDIO_USER=$(kubectl get secret supabase-dashboard -n supabase -o jsonpath='{.data.username}' | base64 --decode)
+export STUDIO_PASS=$(kubectl get secret supabase-dashboard -n supabase -o jsonpath='{.data.password}' | base64 --decode)
+
+echo "User: $STUDIO_USER | Pass: $STUDIO_PASS"
+
+```
+
+<img width="1612" height="169" alt="image" src="https://github.com/user-attachments/assets/2d1b3d85-2ef3-4fcc-b021-0164caa7c585" />
+
+### Test the API Gateway (Kong)
+Test if the external ingress is routing traffic to the REST API.
+
+#### Local Port-Forward (Quick Test):
+```bash
+kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
+
+```
+#### Authorized Request:
+In a new terminal, run:
+
+```bash
+curl -i -H "apikey: $ANON_KEY" -H "Authorization: Bearer $ANON_KEY" http://localhost:8443/rest/v1/
+
+```
+#### Expected Result: HTTP/1.1 200 OK
+
+#### Access the Studio (Dashboard)
+Your Ingress is configured for the host supabase.local.
+Option 1: Using /etc/hosts (Recommended for Ingress test)
+Get your LoadBalancer IP: nslookup <YOUR_AWS_ELB_DNS_NAME>
+Add to your local /etc/hosts: <LB_IP> supabase.local
+Visit: http://supabase.local
+Option 2: Port-Forward (Immediate access)
+```bash
+kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
+```
+
+Visit: http://localhost:8000 and use the credentials retrieved in Step B.
 ## 6. Troubleshooting
 
 ### Handling State Lock Errors
