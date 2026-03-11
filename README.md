@@ -319,7 +319,26 @@ $ chmod +x tests/smoke-test.sh
 $ ./tests/smoke-test.sh
 ```
 
-## 7. Troubleshooting
+## 7. Scalability & Performance
+
+#### Autoscaling (HPA)
+Key components (`postgrest`, `realtime`, `storage`) are configured with **Horizontal Pod Autoscalers (HPA)**. They will scale between 2 and 10 replicas based on CPU/Memory thresholds.
+
+#### Cluster Autoscaling
+We use **Karpenter** (or Cluster Autoscaler) to provision new EKS nodes automatically when HPA triggers pod expansion.
+
+#### Cloud-Native Security
+- **Secrets Management**: Integrated with AWS Secrets Manager via External Secrets Operator.
+- **Storage**: AWS S3 is used for object storage (replacing MinIO).
+- **Network Isolation**: Kubernetes NetworkPolicies restrict traffic to prevent unauthorized internal access.
+
+#### Smoke Testing
+Run the automated production check:
+```bash
+./tests/smoke-test.sh
+
+
+## 8. Troubleshooting
 
 ### Handling State Lock Errors
 
@@ -362,23 +381,4 @@ on:
         - dev
         - staging
         - prod
-```
-### Project Structure
-
-```bash
-.
-├── 00-providers.tf    # S3 Backend & AWS Provider
-├── 01-variables.tf    # Input variables with descriptions
-├── 02-locals.tf       # Dynamic naming logic
-├── 03-network.tf      # VPC & NAT Gateways
-├── 04-storage.tf      # S3 Buckets & Encryption
-├── 05-iam.tf          # EKS Access Entries & Roles
-├── 06-database.tf     # RDS PostgreSQL (Multi-AZ)
-├── 07-eks.tf          # Kubernetes Cluster & Add-ons
-├── 08-outputs.tf      # Endpoints and connection strings
-├── Makefile           # CLI Shortcuts
-└── env/               # Environment variable files
-    ├── dev.tfvars
-    ├── staging.tfvars
-    └── prod.tfvars
 ```
