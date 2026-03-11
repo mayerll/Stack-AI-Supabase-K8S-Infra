@@ -246,15 +246,14 @@ Test if the external ingress is routing traffic to the REST API.
 
 #### Local Port-Forward (Quick Test):
 ```bash
-kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
-
+$ kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
 ```
 ### Authenticated API Test
 Run the following to verify the API accepts your `anon` key:
 
 1. **Get the key:**
-   ```bash
-   kubectl get secret supabase-jwt -n supabase -o jsonpath='{.data.anonKey}' | base64 --decode
+```bash
+$ kubectl get secret supabase-jwt -n supabase -o jsonpath='{.data.anonKey}' | base64 --decode
 ```
 You will get ANON_KEY key.
 
@@ -263,7 +262,7 @@ You will get ANON_KEY key.
 In a new terminal, run:
 
 ```bash
-curl -i -H "apikey: $ANON_KEY" -H "Authorization: Bearer $ANON_KEY" http://localhost:8443/rest/v1/
+$ curl -i -H "apikey: $ANON_KEY" -H "Authorization: Bearer $ANON_KEY" http://localhost:8443/rest/v1/
 
 ```
 #### Expected Result: HTTP/1.1 200 OK
@@ -277,22 +276,24 @@ Add to your local /etc/hosts: <LB_IP> supabase.local
 Visit: http://supabase.local
 ##### Option 2: Port-Forward (Immediate access)
 ```bash
-kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
+$ kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
 ```
 Visit: http://localhost:8000 and use the credentials (username and password) retrieved before.
 
 #### Access the Studio (Dashboard)
 Your Ingress is configured for the host supabase.local.
-Option 1: Using /etc/hosts (Recommended for Ingress test)
+
+##### Option 1: Using /etc/hosts (Recommended for Ingress test)
 Get your LoadBalancer IP: nslookup <YOUR_AWS_ELB_DNS_NAME>
 Add to your local /etc/hosts: <LB_IP> supabase.local
 Visit: http://supabase.local
-Option 2: Port-Forward (Immediate access)
+
+##### Option 2: Port-Forward (Immediate access)
 ```bash
-kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
+$ kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
 ```
 
-Visit: http://localhost:8000 and use the credentials retrieved in Step B.
+Visit: http://localhost:8000 and use the credentials (username and password) retrieved.
 
 ### Service Endpoint Summary
 
