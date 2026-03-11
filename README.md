@@ -8,19 +8,19 @@ Ensure your local environment is authenticated with the correct AWS Account (905
 
 ```bash
 # Check current AWS credentials
-env | grep AWS
+$ env | grep AWS
 ```
 
 # Verify identity
 
 ```bash
-aws sts get-caller-identity
+$ aws sts get-caller-identity
 ```
 
 ####  Expected Output:
 
 ```bash
-aws sts get-caller-identity
+$ aws sts get-caller-identity
  {
      "UserId": "905921696455",
      "Account": "905921696455",
@@ -30,7 +30,7 @@ aws sts get-caller-identity
 
 ####  If identity is missing or incorrect, run:
 ```bash
-aws configure
+$ aws configure
 ```
 
 # Create the EKS Admin User
@@ -38,7 +38,7 @@ aws configure
 ```bash
 # The Terraform configuration (05-iam.tf) expects this user to exist 
 # to grant ClusterAdmin permissions via Access Entries.
-aws iam create-user --user-name eks-admin
+$ aws iam create-user --user-name eks-admin
 ```
 
 #### Why we create this user manually:
@@ -56,19 +56,27 @@ Terraform requires an S3 bucket and a DynamoDB table to manage state files and s
 
 ### Create S3 Bucket (State Storage)
 
+
+####  1. Create the S3 Bucket
+
 ```bash
-# 1. Create the S3 Bucket
-aws s3api create-bucket \
+$ aws s3api create-bucket \
     --bucket stackai-supabase-terraform-state \
     --region us-west-2 \
     --create-bucket-configuration LocationConstraint=us-west-2
+```
 
-# 2. Enable Versioning (Required for state recovery)
-aws s3api put-bucket-versioning \
+####  2. Enable Versioning (Required for state recovery)
+
+```bash
+$ aws s3api put-bucket-versioning \
     --bucket stackai-supabase-terraform-state \
     --versioning-configuration Status=Enabled
 
-# 3. Enable Default Encryption
+```
+####  3. Enable Default Encryption
+
+```bash
 aws s3api put-bucket-encryption \
     --bucket stackai-supabase-terraform-state \
     --server-side-encryption-configuration '{
@@ -79,9 +87,8 @@ aws s3api put-bucket-encryption \
 ### Create DynamoDB Table (State Locking)
 
 ```bash
-
 # Create the table with the required Partition Key: LockID
-aws dynamodb create-table \
+$ aws dynamodb create-table \
     --table-name supabase-terraform-state-lock \
     --region us-west-2 \
     --attribute-definitions AttributeName=LockID,AttributeType=S \
@@ -97,19 +104,20 @@ We use Terraform Workspaces to isolate Dev, Staging, and Prod environments.
 
 ```bash
 # Initialize backend and download modules
-terraform init
+$ terraform init
 
 # Create and switch to the 'prod' workspace
-terraform workspace new prod
+$ terraform workspace new prod
 
 # Verify current workspace
-terraform workspace show  # Should display 'prod'
+$ terraform workspace show  # Should display 'prod'
 ```
+
 ### Deploying Infrastructure
 
 ```bash
 # Execute deployment using environment-specific variables, for example:
-terraform apply -var-file="env/prod.tfvars"
+$ terraform apply -var-file="env/prod.tfvars"
 ```
 <img width="1029" height="252" alt="bash-5 1# terraform workspace new prod" src="https://github.com/user-attachments/assets/6b10a769-6402-4b9f-9e5c-b178af9a76c3" />
 
@@ -124,7 +132,7 @@ If a deployment is interrupted, you may encounter a ConditionalCheckFailedExcept
 # Lock Info ID: ff9f9069-c27b-ea13-d2a1-7f8feae274fb
 
 # Resolution: Force unlock
-terraform force-unlock ff9f9069-c27b-ea13-d2a1-7f8feae274fb
+$ terraform force-unlock ff9f9069-c27b-ea13-d2a1-7f8feae274fb
 ```
 
 ### EKS Version Upgrades
