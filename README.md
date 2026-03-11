@@ -121,7 +121,51 @@ $ terraform apply -var-file="env/prod.tfvars"
 ```
 <img width="1029" height="252" alt="bash-5 1# terraform workspace new prod" src="https://github.com/user-attachments/assets/6b10a769-6402-4b9f-9e5c-b178af9a76c3" />
 
-## 4. Troubleshooting
+
+## 4. Output and Connectivity
+
+Upon a successful `apply`, Terraform will output the following details. You can use these to verify the resources or connect to the EKS cluster and RDS database.
+
+### Example Production Output
+```hcl
+deployment_info = {
+  "prefix"    = "prod-stackai-supabase"
+  "region"    = "us-west-2"
+  "workspace" = "prod"
+}
+eks_cluster_name       = "prod-stackai-supabase-eks"
+eks_cluster_endpoint   = "https://7484600AD96A0363244A4FEE39CDA4B2.gr7.us-west-2.eks.amazonaws.com"
+kubectl_config_command = "aws eks update-kubeconfig --region us-west-2 --name prod-stackai-supabase-eks"
+rds_db_endpoint        = "prod-stackai-supabase-db.c3cqiieqif31.us-west-2.rds.amazonaws.com:5432"
+rds_db_name            = "postgres"
+s3_bucket_name         = "stackai-supabase-storage-prod-us-west-2"
+vpc_id                 = "vpc-03a2636c324942e42"
+vpc_cidr_block         = "10.30.0.0/16"
+
+
+<img width="1493" height="436" alt="image" src="https://github.com/user-attachments/assets/3345353c-b1c7-4739-99e5-20430fdb5108" />
+
+
+#### Connect to EKS Cluster
+
+Simply copy and run the generated kubectl_config_command to update your local kubeconfig:
+
+```bash
+# Run the command from your output
+aws eks update-kubeconfig --region us-west-2 --name prod-stackai-supabase-eks
+
+# Verify connection
+kubectl get nodes
+```
+#### Access RDS Database
+The database is located in the Private Subnets for security. Access it via the EKS pods or a VPN/Bastion host within the VPC using the rds_db_endpoint.
+
+```bash
+# Example psql string
+psql -h <rds_db_endpoint> -U supabase_admin -d postgres
+```
+
+## 5. Troubleshooting
 
 ### Handling State Lock Errors
 
@@ -140,7 +184,7 @@ $ terraform force-unlock ff9f9069-c27b-ea13-d2a1-7f8feae274fb
 AWS EKS does not support skipping minor versions (e.g., 1.28 directly to 1.30).
 Correct Path: Upgrade to 1.29 first, apply, then upgrade to 1.30.
 
-## 5. CI/CD Pipeline (GitHub Actions)
+## 6. CI/CD Pipeline (GitHub Actions)
 
 The project includes a GitHub Action workflow for automated or manual deployments.
 
