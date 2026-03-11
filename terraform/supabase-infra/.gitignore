@@ -28,6 +28,10 @@ crash.*.log
 *.tfvars
 *.tfvars.json
 
+!env/dev.tfvars
+!env/staging.tfvars
+!env/prod.tfvars
+
 # 6. Override files
 # Used for temporary local testing, should never be committed.
 override.tf
