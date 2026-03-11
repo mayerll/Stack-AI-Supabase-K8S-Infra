@@ -27,7 +27,7 @@ resource "aws_db_instance" "supabase_db" {
   identifier        = "supabase-prod-db"
   allocated_storage = 20
   engine            = "postgres"
-  engine_version    = "15.4"
+  engine_version    = "18.3"
   instance_class    = "db.t3.micro"
   db_name           = "postgres"
   username          = "supabase_admin"
