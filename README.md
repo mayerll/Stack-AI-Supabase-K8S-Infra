@@ -49,7 +49,7 @@ aws s3api put-bucket-encryption \
     }'
 ```
 
-## Create DynamoDB Table (State Locking)
+### Create DynamoDB Table (State Locking)
 
 ```bash
 
