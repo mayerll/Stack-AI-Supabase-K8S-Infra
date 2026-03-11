@@ -1,22 +1,8 @@
-
 #!/bin/bash
 set -e
 
 # 0. Install Storage Class
-cat <<EOF | kubectl apply -f -
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: gp3
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-provisioner: ebs.csi.aws.com
-parameters:
-  type: gp3
-  fsType: ext4
-volumeBindingMode: WaitForFirstConsumer
-allowVolumeExpansion: true
-EOF
+kubectl apply -f ../kubernetes/operators/storage-class.yaml
 
 # 1. Ingress NGINX
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -30,7 +16,7 @@ helm repo update
 helm upgrade --install external-secrets external-secrets/external-secrets \
   --namespace external-secrets --create-namespace
 
-# 3. Supabase (FIXED URL)
+# 3. Install/Upgrade Supabase 
 helm repo add supabase https://supabase-community.github.io/supabase-kubernetes
 helm repo update
 
