@@ -167,6 +167,9 @@ $ aws eks update-kubeconfig --region us-west-2 --name prod-stackai-supabase-eks
 
 $ kubectl get nodes
 ```
+<img width="892" height="99" alt="image" src="https://github.com/user-attachments/assets/1adbe288-1a1c-4173-a5a2-391b200b47b1" />
+
+
 #### Access RDS Database
 The database is located in the Private Subnets for security. Access it via the EKS pods or a VPN/Bastion host within the VPC using the rds_db_endpoint.
 
