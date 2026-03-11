@@ -303,7 +303,22 @@ Visit: http://localhost:8000 and use the credentials (username and password) ret
 | **Auth/API** | `supabase-jwt` | `supabase.local/auth` |
 | **Studio UI** | `supabase-dashboard` | `supabase.local` |
 
-## 6. Troubleshooting
+## 6. Security & Cloud Integration
+
+#### AWS S3 & Secrets Manager
+This project uses **AWS S3** for file storage and **AWS Secrets Manager** via External Secrets Operator to manage sensitive keys.
+
+#### Network Policies
+Traffic is restricted using Kubernetes NetworkPolicies. Only the Ingress Controller and internal Supabase services can communicate.
+
+#### Smoke Testing
+To run the automated health check:
+```bash
+chmod +x tests/smoke-test.sh
+$ ./tests/smoke-test.sh
+```
+
+## 7. Troubleshooting
 
 ### Handling State Lock Errors
 
@@ -322,7 +337,7 @@ $ terraform force-unlock ff9f9069-c27b-ea13-d2a1-7f8feae274fb
 AWS EKS does not support skipping minor versions (e.g., 1.28 directly to 1.30).
 Correct Path: Upgrade to 1.29 first, apply, then upgrade to 1.30.
 
-## 7. CI/CD Pipeline (GitHub Actions)
+## 8. CI/CD Pipeline (GitHub Actions)
 
 The project includes a GitHub Action workflow for automated or manual deployments.
 
