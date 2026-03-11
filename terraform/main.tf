@@ -1,38 +1,50 @@
-
-provider "aws" { region = "us-west-2" }
+provider "aws" { 
+  region = var.region 
+}
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"
 
-  name = "supabase-vpc"
-  cidr = "10.0.0.0/16"
+  name = "${var.project_name}-vpc"
+  cidr = var.vpc_cidr
 
-  azs             = ["us-west-2a", "us-west-2b"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
+  azs             = ["${var.region}a", "${var.region}b"]
+  private_subnets = [cidrsubnet(var.vpc_cidr, 8, 1), cidrsubnet(var.vpc_cidr, 8, 2)]
+  public_subnets  = [cidrsubnet(var.vpc_cidr, 8, 101), cidrsubnet(var.vpc_cidr, 8, 102)]
 
   enable_nat_gateway = true
-  single_nat_gateway = true # Cost-effective for demo
+  single_nat_gateway = true
 }
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.0" # v20+ supports AWS provider v5
+  version = "~> 20.0"
 
-  cluster_name    = "supabase-eks"
-  cluster_version = "1.30"
+  cluster_name    = "${var.project_name}-eks"
+  cluster_version = var.eks_version
 
-  vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  vpc_id                         = module.vpc.vpc_id
+  subnet_ids                     = module.vpc.private_subnets
   cluster_endpoint_public_access = true
+
+  # This ensures the role name is clean and fixed
+  iam_role_name            = "${var.project_name}-eks-cluster-role"
+  iam_role_use_name_prefix = false
 
   eks_managed_node_groups = {
     general = {
-      instance_types = ["t3.medium"]
-      min_size       = 2
-      max_size       = 5
-      desired_size   = 2
+      iam_role_name            = "${var.project_name}-node-group-role"
+      iam_role_use_name_prefix = false
+      instance_types           = ["t3.medium"]
+      min_size                 = 2
+      max_size                 = 5
+      desired_size             = 2
+      
+      # Automatically attach the EBS Policy needed for gp3
+      iam_role_additional_policies = {
+        AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+      }
     }
   }
 }

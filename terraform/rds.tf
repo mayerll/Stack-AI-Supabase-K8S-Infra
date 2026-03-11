@@ -1,14 +1,13 @@
 
 resource "aws_security_group" "rds_sg" {
-  name        = "supabase-rds-sg"
-  description = "Security group for Supabase RDS"
+  name        = "${var.project_name}-rds-sg"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # adjust for your security requirements
+    cidr_blocks = [var.vpc_cidr] # More secure: only allow VPC internal traffic
   }
 
   egress {
@@ -17,21 +16,17 @@ resource "aws_security_group" "rds_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = {
-    Name = "supabase-rds-sg"
-  }
 }
 
 resource "aws_db_instance" "supabase_db" {
-  identifier        = "supabase-prod-db"
+  identifier        = "${var.project_name}-db"
   allocated_storage = 20
   engine            = "postgres"
-  engine_version    = "18.3"
-  instance_class    = "db.t3.micro"
+  engine_version    = var.postgres_version
+  instance_class    = var.db_instance_class
   db_name           = "postgres"
   username          = "supabase_admin"
-  password          = "SuperSecretPassword123" # In production, use a variable
+  password          = var.db_password
 
   multi_az               = true
   db_subnet_group_name   = aws_db_subnet_group.db_subnets.name
@@ -40,7 +35,7 @@ resource "aws_db_instance" "supabase_db" {
 }
 
 resource "aws_db_subnet_group" "db_subnets" {
-  name       = "supabase-db-subnets"
+  name       = "${var.project_name}-db-subnets"
   subnet_ids = module.vpc.private_subnets
 }
 
