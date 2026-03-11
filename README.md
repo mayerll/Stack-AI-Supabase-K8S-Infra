@@ -313,8 +313,9 @@ Traffic is restricted using Kubernetes NetworkPolicies. Only the Ingress Control
 
 #### Smoke Testing
 To run the automated health check:
+
 ```bash
-chmod +x tests/smoke-test.sh
+$ chmod +x tests/smoke-test.sh
 $ ./tests/smoke-test.sh
 ```
 
