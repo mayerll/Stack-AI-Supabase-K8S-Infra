@@ -27,7 +27,7 @@ Ensure your local environment is authenticated with the correct AWS Account (905
 $ env | grep AWS
 ```
 
-# Verify identity
+#### Verify identity
 
 ```bash
 $ aws sts get-caller-identity
