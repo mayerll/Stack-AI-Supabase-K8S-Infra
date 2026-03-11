@@ -126,7 +126,7 @@ $ terraform workspace show  # Should display 'prod'
 # Execute deployment using environment-specific variables, for example:
 $ terraform apply -var-file="env/prod.tfvars"
 ```
-<img width="1029" height="252" alt="bash-5 1# terraform workspace new prod" src="https://github.com/user-attachments/assets/6b10a769-6402-4b9f-9e5c-b178af9a76c3" />
+<img width="822" height="189" alt="bash-5 1# terraform workspace new prod" src="https://github.com/user-attachments/assets/6b10a769-6402-4b9f-9e5c-b178af9a76c3" />
 
 
 ## 4. Output and Connectivity
