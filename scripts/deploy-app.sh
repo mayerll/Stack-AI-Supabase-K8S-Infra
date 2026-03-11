@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# 0. Install Storage Class
+# 0. Storage Class
 kubectl apply -f ../kubernetes/operators/storage-class.yaml
 
 # 1. Ingress NGINX
