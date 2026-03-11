@@ -79,9 +79,10 @@ terraform workspace new prod
 # Verify current workspace
 terraform workspace show  # Should display 'prod'
 ```
-Deploying Infrastructure
+### Deploying Infrastructure
+
 ```bash
-# Execute deployment using environment-specific variables
+# Execute deployment using environment-specific variables, for example:
 terraform apply -var-file="env/prod.tfvars"
 ```
 
@@ -108,10 +109,11 @@ Correct Path: Upgrade to 1.29 first, apply, then upgrade to 1.30.
 
 The project includes a GitHub Action workflow for automated or manual deployments.
 
-Configuration
+### Configuration
 Add AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to GitHub Secrets.
 Add TF_VAR_DB_PASSWORD to GitHub Secrets to avoid plain-text passwords in the repo.
-Manual Trigger Logic
+
+### Manual Trigger Logic
 The workflow uses workflow_dispatch to allow manual selection of the target environment.
 
 ```bash
