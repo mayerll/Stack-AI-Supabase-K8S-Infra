@@ -1,0 +1,54 @@
+
+# ==========================================
+# Terraform Professional .gitignore
+# ==========================================
+
+# 1. Local .terraform directory (Contains binary providers and modules)
+# This folder is huge and should be regenerated via 'terraform init'
+.terraform/
+
+# 2. Local State files 
+# Since we are using S3 Backend, these should NOT exist locally.
+# If they do, they are likely accidental local runs.
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+
+# 3. Workspace directories
+# Local workspace state copies (S3 handles these under 'env:/' prefix)
+terraform.tfstate.d/
+
+# 4. Crash log files
+crash.log
+crash.*.log
+
+# 5. Variable files (SENSITIVE)
+# We ignore ALL .tfvars because they contain passwords/account IDs.
+# Professionals use 'terraform.tfvars.example' for templates instead.
+*.tfvars
+*.tfvars.json
+
+# 6. Override files
+# Used for temporary local testing, should never be committed.
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# 7. Terraform CLI configuration
+.terraformrc
+terraform.rc
+
+# 8. Dependency lock file
+# STRATEGY: 
+# - Commit this if you want strict version consistency across the team.
+# - Ignore it if you prefer 'terraform init' to always fetch latest allowed.
+# Professionals usually COMMIT this. If you want to commit it, add an '!' prefix.
+.terraform.lock.hcl
+
+# 9. System / IDE files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
