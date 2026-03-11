@@ -8,7 +8,7 @@
 resource "aws_s3_bucket" "storage" {
   bucket = "stackai-supabase-storage-${terraform.workspace}-${var.region}"
 
-  tags = merge(locals.common_tags, {
+  tags = merge(local.common_tags, {
     Name        = "StackAI Supabase Storage"
     ManagedBy   = "Terraform"
     Environment = terraform.workspace

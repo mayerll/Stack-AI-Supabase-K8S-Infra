@@ -6,7 +6,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"
 
-  name = "${locals.env_prefix}-vpc"
+  name = "${local.env_prefix}-vpc"
   cidr = var.vpc_cidr
 
   # Deploy across multiple AZs for resilience
@@ -30,15 +30,15 @@ module "vpc" {
   # Standard EKS Discovery Tags
   public_subnet_tags = {
     "kubernetes.io/role/elb"                       = "1"
-    "kubernetes.io/cluster/${locals.env_prefix}-eks" = "shared"
+    "kubernetes.io/cluster/${local.env_prefix}-eks" = "shared"
   }
 
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb"              = "1"
-    "kubernetes.io/cluster/${locals.env_prefix}-eks" = "shared"
+    "kubernetes.io/cluster/${local.env_prefix}-eks" = "shared"
   }
 
-  tags = locals.common_tags
+  tags = local.common_tags
 }
 
 # ==========================================

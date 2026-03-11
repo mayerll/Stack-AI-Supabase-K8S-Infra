@@ -7,7 +7,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.0"
 
-  cluster_name    = "${locals.env_prefix}-eks"
+  cluster_name    = "${local.env_prefix}-eks"
   cluster_version = var.eks_version
 
   # Networking
@@ -46,11 +46,9 @@ module "eks" {
   }
 
   # ==========================================
-  # Dependency & Lifecycle
+  # Dependency 
   # ==========================================
 
-  # CRITICAL: EKS requires the VPC (NAT Gateways & Routes) to be 100% ready 
-  # so that nodes can join the cluster and pull images.
   depends_on = [
     module.vpc,
     aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy,
@@ -58,16 +56,7 @@ module "eks" {
     aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryReadOnly
   ]
 
-  # Lifecycle: Protect the cluster from accidental deletion
-  # If you change the cluster name, Terraform will block the destroy.
-  lifecycle {
-    prevent_destroy       = true
-    create_before_destroy = true
-    # Ignore changes to desired_size if you use Cluster Autoscaler
-    ignore_changes        = [eks_managed_node_groups["general"].desired_size]
-  }
-
-  tags = locals.common_tags
+  tags = local.common_tags
 }
 
 

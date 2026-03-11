@@ -32,7 +32,7 @@ resource "aws_eks_access_policy_association" "eks_admin_policy" {
 # 2. Worker Node IAM Role
 # ==========================================
 resource "aws_iam_role" "eks_nodes" {
-  name = "${locals.env_prefix}-node-role"
+  name = "${local.env_prefix}-node-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -50,7 +50,7 @@ resource "aws_iam_role" "eks_nodes" {
     create_before_destroy = true
   }
 
-  tags = locals.common_tags
+  tags = local.common_tags
 }
 
 # ==========================================

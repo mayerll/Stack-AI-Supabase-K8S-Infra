@@ -65,7 +65,7 @@ output "deployment_info" {
   value = {
     workspace = terraform.workspace
     region    = var.region
-    prefix    = locals.env_prefix
+    prefix    = local.env_prefix
   }
 }
 

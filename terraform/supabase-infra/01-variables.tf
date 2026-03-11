@@ -34,7 +34,7 @@ variable "vpc_cidr" {
 variable "postgres_version" {
   description = "The version of the PostgreSQL engine to use for the RDS instance."
   type        = string
-  default     = "15.4"
+  default     = "15"
 }
 
 variable "db_instance_class" {
@@ -60,7 +60,7 @@ variable "db_storage" {
 variable "eks_version" {
   description = "The desired Kubernetes version for the EKS cluster (e.g., 1.28)."
   type        = string
-  default     = "1.28"
+  default     = "1.31"
 }
 
 variable "eks_instance_type" {

@@ -1,3 +1,4 @@
+
 locals {
   env_prefix = "${terraform.workspace}-${var.project_name}"
 
@@ -7,3 +8,4 @@ locals {
     ManagedBy   = "Terraform"
   }
 }
+

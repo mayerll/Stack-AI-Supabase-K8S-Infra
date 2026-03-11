@@ -3,7 +3,7 @@
 # 1. RDS Security Group
 # ==========================================
 resource "aws_security_group" "rds_sg" {
-  name        = "${locals.env_prefix}-rds-sg"
+  name        = "${local.env_prefix}-rds-sg"
   description = "Allow PostgreSQL traffic from within the VPC"
   vpc_id      = module.vpc.vpc_id
 
@@ -23,24 +23,24 @@ resource "aws_security_group" "rds_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = locals.common_tags
+  tags = local.common_tags
 }
 
 # ==========================================
 # 2. DB Subnet Group
 # ==========================================
 resource "aws_db_subnet_group" "db_subnets" {
-  name       = "${locals.env_prefix}-db-subnets"
+  name       = "${local.env_prefix}-db-subnets"
   subnet_ids = module.vpc.private_subnets
 
-  tags = locals.common_tags
+  tags = local.common_tags
 }
 
 # ==========================================
 # 3. RDS PostgreSQL Instance
 # ==========================================
 resource "aws_db_instance" "supabase_db" {
-  identifier        = "${locals.env_prefix}-db"
+  identifier        = "${local.env_prefix}-db"
   allocated_storage = var.db_storage
   engine            = "postgres"
   engine_version    = var.postgres_version
@@ -58,7 +58,7 @@ resource "aws_db_instance" "supabase_db" {
   # Since 'dev' no longer needs to save cost, we enable Multi-AZ for all envs
   multi_az               = true
   skip_final_snapshot    = terraform.workspace == "prod" ? false : true
-  final_snapshot_identifier = "${locals.env_prefix}-db-final-snapshot"
+  final_snapshot_identifier = "${local.env_prefix}-db-final-snapshot"
   backup_retention_period = 7
 
   # ==========================================
@@ -83,6 +83,6 @@ resource "aws_db_instance" "supabase_db" {
     create_before_destroy = true
   }
 
-  tags = locals.common_tags
+  tags = local.common_tags
 }
 
