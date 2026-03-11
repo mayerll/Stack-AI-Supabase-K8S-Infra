@@ -197,8 +197,21 @@ The database is located in the Private Subnets for security. Access it via the E
 
 $ psql -h <rds_db_endpoint> -U supabase_admin -d postgres
 ```
+## 5. Test on Supabase
 
-## 5. Troubleshooting
+Once the pods are in a `Running` state, follow these steps to verify your deployment.
+
+### A. Quick Access (No DNS Required)
+Use Kubernetes port-forwarding to access the **Supabase Studio (Dashboard)** immediately on your local machine:
+
+```bash
+# Forward Studio (Dashboard)
+kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
+
+# Forward API Gateway (Kong)
+kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
+```
+## 6. Troubleshooting
 
 ### Handling State Lock Errors
 
@@ -217,7 +230,7 @@ $ terraform force-unlock ff9f9069-c27b-ea13-d2a1-7f8feae274fb
 AWS EKS does not support skipping minor versions (e.g., 1.28 directly to 1.30).
 Correct Path: Upgrade to 1.29 first, apply, then upgrade to 1.30.
 
-## 6. CI/CD Pipeline (GitHub Actions)
+## 7. CI/CD Pipeline (GitHub Actions)
 
 The project includes a GitHub Action workflow for automated or manual deployments.
 
