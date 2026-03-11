@@ -13,18 +13,30 @@
 #  depends_on = [module.eks]
 #}
 #
+# ==========================================
+# 1. EKS Cluster Access Management
+# ==========================================
+
+# Create the Access Entry for the admin user
 resource "aws_eks_access_entry" "eks_admin" {
   cluster_name      = module.eks.cluster_name
-  # Replace with your actual ARN from the command above
-  principal_arn     = "arn:aws:iam::905921696455:root" 
-  user_name         = "admin"
+  principal_arn     = "arn:aws:iam::${var.aws_account_id}:user/eks-admin"
+  user_name         = "eks-admin"
   type              = "STANDARD"
 
+  # Must wait for the cluster to be active
   depends_on = [module.eks]
 }
 
+# PROFESSIONAL FIX: Add a 30s delay to handle AWS IAM eventual consistency.
+# This prevents the "PrincipalArn could not be found" error during policy association.
+resource "time_sleep" "wait_for_iam_propagation" {
+  depends_on = [aws_eks_access_entry.eks_admin]
 
-# Grant ClusterAdmin permissions to the entry
+  create_duration = "30s"
+}
+
+# Associate the ClusterAdmin policy to the user
 resource "aws_eks_access_policy_association" "eks_admin_policy" {
   cluster_name  = module.eks.cluster_name
   policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
@@ -34,9 +46,8 @@ resource "aws_eks_access_policy_association" "eks_admin_policy" {
     type = "cluster"
   }
 
-  # CRITICAL: The policy cannot be associated until the Access Entry exists
-  # Terraform often misses this hidden dependency without an explicit block
-  depends_on = [aws_eks_access_entry.eks_admin]
+  # Wait for the 30s timer instead of the resource directly
+  depends_on = [time_sleep.wait_for_iam_propagation]
 }
 
 # ==========================================
@@ -56,7 +67,6 @@ resource "aws_iam_role" "eks_nodes" {
     }]
   })
 
-  # Lifecycle: Prevent accidental deletion of the core node role
   lifecycle {
     create_before_destroy = true
   }
@@ -67,7 +77,6 @@ resource "aws_iam_role" "eks_nodes" {
 # ==========================================
 # 3. Standard EKS Node Policy Attachments
 # ==========================================
-# These managed policies are required for nodes to join the cluster and pull images
 resource "aws_iam_role_policy_attachment" "node_AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
   role       = aws_iam_role.eks_nodes.name
@@ -83,7 +92,6 @@ resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOn
   role       = aws_iam_role.eks_nodes.name
 }
 
-# Required for the EBS CSI Driver to manage gp3 volumes (Storage)
 resource "aws_iam_role_policy_attachment" "node_AmazonEBSCSIDriverPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
   role       = aws_iam_role.eks_nodes.name
