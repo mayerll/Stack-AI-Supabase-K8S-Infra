@@ -8,6 +8,7 @@ Ensure your local environment is authenticated with the correct AWS Account (905
 
 ```bash
 # Check current AWS credentials
+
 $ env | grep AWS
 ```
 
@@ -38,6 +39,7 @@ $ aws configure
 ```bash
 # The Terraform configuration (05-iam.tf) expects this user to exist 
 # to grant ClusterAdmin permissions via Access Entries.
+
 $ aws iam create-user --user-name eks-admin
 ```
 
@@ -60,6 +62,7 @@ Terraform requires an S3 bucket and a DynamoDB table to manage state files and s
 ####  1. Create the S3 Bucket
 
 ```bash
+
 $ aws s3api create-bucket \
     --bucket stackai-supabase-terraform-state \
     --region us-west-2 \
@@ -69,6 +72,7 @@ $ aws s3api create-bucket \
 ####  2. Enable Versioning (Required for state recovery)
 
 ```bash
+
 $ aws s3api put-bucket-versioning \
     --bucket stackai-supabase-terraform-state \
     --versioning-configuration Status=Enabled
@@ -77,7 +81,7 @@ $ aws s3api put-bucket-versioning \
 ####  3. Enable Default Encryption
 
 ```bash
-aws s3api put-bucket-encryption \
+$ aws s3api put-bucket-encryption \
     --bucket stackai-supabase-terraform-state \
     --server-side-encryption-configuration '{
         "Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]
@@ -88,6 +92,7 @@ aws s3api put-bucket-encryption \
 
 ```bash
 # Create the table with the required Partition Key: LockID
+
 $ aws dynamodb create-table \
     --table-name supabase-terraform-state-lock \
     --region us-west-2 \
@@ -103,6 +108,7 @@ We use Terraform Workspaces to isolate Dev, Staging, and Prod environments.
 ### Initialize and Switch Workspace
 
 ```bash
+
 # Initialize backend and download modules
 $ terraform init
 
@@ -116,6 +122,7 @@ $ terraform workspace show  # Should display 'prod'
 ### Deploying Infrastructure
 
 ```bash
+
 # Execute deployment using environment-specific variables, for example:
 $ terraform apply -var-file="env/prod.tfvars"
 ```
@@ -127,6 +134,7 @@ $ terraform apply -var-file="env/prod.tfvars"
 Upon a successful `apply`, Terraform will output the following details. You can use these to verify the resources or connect to the EKS cluster and RDS database.
 
 ### Example Production Output
+
 ```hcl
 deployment_info = {
   "prefix"    = "prod-stackai-supabase"
@@ -141,7 +149,7 @@ rds_db_name            = "postgres"
 s3_bucket_name         = "stackai-supabase-storage-prod-us-west-2"
 vpc_id                 = "vpc-03a2636c324942e42"
 vpc_cidr_block         = "10.30.0.0/16"
-
+```
 
 <img width="1493" height="436" alt="image" src="https://github.com/user-attachments/assets/3345353c-b1c7-4739-99e5-20430fdb5108" />
 
@@ -152,17 +160,20 @@ Simply copy and run the generated kubectl_config_command to update your local ku
 
 ```bash
 # Run the command from your output
-aws eks update-kubeconfig --region us-west-2 --name prod-stackai-supabase-eks
+
+$ aws eks update-kubeconfig --region us-west-2 --name prod-stackai-supabase-eks
 
 # Verify connection
-kubectl get nodes
+
+$ kubectl get nodes
 ```
 #### Access RDS Database
 The database is located in the Private Subnets for security. Access it via the EKS pods or a VPN/Bastion host within the VPC using the rds_db_endpoint.
 
 ```bash
 # Example psql string
-psql -h <rds_db_endpoint> -U supabase_admin -d postgres
+
+$ psql -h <rds_db_endpoint> -U supabase_admin -d postgres
 ```
 
 ## 5. Troubleshooting
