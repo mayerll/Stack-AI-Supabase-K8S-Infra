@@ -24,6 +24,25 @@ aws sts get-caller-identity
 aws configure
 ```
 
+```bash
+# Verify identity
+aws sts get-caller-identity
+
+# 1.1 Create the EKS Admin User
+# The Terraform configuration (05-iam.tf) expects this user to exist 
+# to grant ClusterAdmin permissions via Access Entries.
+aws iam create-user --user-name eks-admin
+```
+
+#### Why we create this user manually:
+
+In a professional production environment, Identity (IAM Users) and Infrastructure (EKS/RDS) are managed in separate layers.
+
+Decoupling: Prevents the admin user from being accidentally deleted if the EKS cluster is destroyed.
+Consistency: Ensures the same management identity can be used across dev, staging, and prod without naming conflicts inside Terraform state.
+
+
+
 ## 2. Bootstrap Remote Backend
 
 Terraform requires an S3 bucket and a DynamoDB table to manage state files and state locking. These must be created manually before running terraform init.
