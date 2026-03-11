@@ -27,7 +27,8 @@ aws configure
 ## 2. Bootstrap Remote Backend
 
 Terraform requires an S3 bucket and a DynamoDB table to manage state files and state locking. These must be created manually before running terraform init.
-Create S3 Bucket (State Storage)
+
+### Create S3 Bucket (State Storage)
 
 ```bash
 # 1. Create the S3 Bucket
@@ -61,6 +62,7 @@ aws dynamodb create-table \
     --key-schema AttributeName=LockID,KeyType=HASH \
     --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
 ```
+
 ## 3. Environment Management (IaaS)
 
 We use Terraform Workspaces to isolate Dev, Staging, and Prod environments.
