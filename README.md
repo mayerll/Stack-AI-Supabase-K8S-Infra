@@ -170,9 +170,8 @@ $ kubectl get nodes
 $ kubectl get pod -A
 
 ```
-<img width="892" height="99" alt="image" src="https://github.com/user-attachments/assets/1adbe288-1a1c-4173-a5a2-391b200b47b1" />
 
-<img width="1506" height="867" alt="image" src="https://github.com/user-attachments/assets/046bf58b-085d-4206-82eb-24c1e1a3aad1" />
+<img width="1535" height="1009" alt="image" src="https://github.com/user-attachments/assets/8ced9895-60cc-4bb3-8a6a-c476f0419698" />
 
 
 #### Access RDS Database
