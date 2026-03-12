@@ -389,7 +389,7 @@ on:
 While a full monitoring stack is not deployed in this implementation, the architecture is designed with observability in mind. In a production environment, the Supabase deployment would integrate with AWS-native monitoring services and open-source observability tools.
 e.g:
 
-<img width="999" height="83" alt="image" src="https://github.com/user-attachments/assets/0918905f-1186-468c-98fe-1088d655b85f" />
+<img width="1551" height="81" alt="image" src="https://github.com/user-attachments/assets/7b878035-c1ba-4982-993f-a60102604a36" />
 
 
 
