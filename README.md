@@ -357,6 +357,9 @@ on:
         - staging
         - prod
 ```
+
+<img width="1952" height="601" alt="image" src="https://github.com/user-attachments/assets/e6216e3d-9a9d-486b-bd8b-8f37bfe3f3ad" />
+
 ## 9. Observability Strategy
 
 While a full monitoring stack is not deployed in this implementation, the architecture is designed with observability in mind. In a production environment, the Supabase deployment would integrate with AWS-native monitoring services and open-source observability tools.
