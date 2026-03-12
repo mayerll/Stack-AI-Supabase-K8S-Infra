@@ -384,3 +384,146 @@ on:
         - staging
         - prod
 ```
+## 9. Observability Strategy
+
+While a full monitoring stack is not deployed in this implementation, the architecture is designed with observability in mind. In a production environment, the Supabase deployment would integrate with AWS-native monitoring services and open-source observability tools.
+
+The following observability pillars would be implemented:
+
+### Metrics Monitoring
+
+Cluster and application metrics can be collected using **Prometheus** and visualized through **Grafana** dashboards.
+
+Typical monitored metrics include:
+
+* Kubernetes node CPU and memory utilization
+* Pod-level resource consumption
+* PostgREST request latency and throughput
+* Realtime WebSocket connection counts
+* Storage API request rate
+* Database connection pool usage
+
+Prometheus can be deployed using the `kube-prometheus-stack` Helm chart, which includes:
+
+* Prometheus
+* Grafana
+* Alertmanager
+* Node Exporter
+* kube-state-metrics
+
+Example installation:
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
+```
+
+Grafana dashboards would provide operational visibility into Supabase components and Kubernetes cluster health.
+
+---
+
+### Logging
+
+Container logs from Supabase services (PostgREST, Realtime, Auth, Storage API, Kong) can be aggregated using **AWS CloudWatch Logs**.
+
+Recommended architecture:
+
+```
+Kubernetes Pods
+      │
+Fluent Bit / CloudWatch Agent
+      │
+Amazon CloudWatch Logs
+```
+
+This enables centralized log storage, log search, and retention policies.
+
+Logs can also be exported to systems such as:
+
+* Loki
+* Elasticsearch / OpenSearch
+* Datadog
+
+---
+
+### Kubernetes Cluster Monitoring
+
+For Kubernetes infrastructure monitoring, **Amazon CloudWatch Container Insights** can be enabled on the EKS cluster.
+
+This provides:
+
+* Node-level metrics
+* Pod lifecycle monitoring
+* Cluster capacity tracking
+* Performance dashboards
+
+Container Insights integrates with:
+
+* CloudWatch Metrics
+* CloudWatch Logs
+* CloudWatch Alarms
+
+---
+
+### Alerting
+
+Alerting rules would be defined through **Prometheus Alertmanager** or **CloudWatch Alarms**.
+
+Example alerts include:
+
+* High CPU or memory usage on Supabase services
+* Pod crash loops
+* Kubernetes node exhaustion
+* RDS database connection saturation
+* Elevated API latency
+
+Alerts can be routed to operational channels such as:
+
+* Slack
+* PagerDuty
+* Email
+* Incident management systems
+
+---
+
+### Database Observability
+
+The managed PostgreSQL database running on **Amazon RDS** provides built-in monitoring capabilities:
+
+* Amazon RDS Performance Insights
+* CloudWatch metrics for database performance
+* Slow query logging
+* Automated backup monitoring
+
+Key metrics monitored:
+
+* Database connections
+* CPU usage
+* Read/write latency
+* Query performance
+
+---
+
+### Autoscaling Observability
+
+Autoscaling decisions are observable through:
+
+* Kubernetes Horizontal Pod Autoscaler metrics
+* Karpenter node provisioning metrics
+* Prometheus metrics for pod resource utilization
+
+These metrics allow operators to validate scaling behavior under load.
+
+---
+
+### Future Improvements
+
+Future enhancements to observability could include:
+
+* Distributed tracing using OpenTelemetry
+* Service-level monitoring using Grafana Tempo
+* Log aggregation using Loki
+* Synthetic health checks for Supabase endpoints
+* End-to-end request tracing across Supabase services
+
+These improvements would further enhance system reliability and operational visibility.
