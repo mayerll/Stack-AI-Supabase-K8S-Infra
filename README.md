@@ -40,7 +40,7 @@ $ aws sts get-caller-identity
  {
      "UserId": "905921696451",
      "Account": "905921696451",
-     "Arn": "arn:aws:iam::905921696455:root"
+     "Arn": "arn:aws:iam::905921696451:root"
  }
 ```
 
