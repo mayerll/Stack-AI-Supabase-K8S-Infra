@@ -231,14 +231,6 @@ $ kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
 
 Follow these steps to ensure the database, API gateway, and dashboard are working correctly.
 
-### Database Connectivity
-Verify that the PostgreSQL engine is online and accepting internal queries:
-
-```bash
-$ kubectl exec -it -n supabase supabase-supabase-db-0 -- psql -U postgres -c "SELECT version();"
-```
-<img width="1492" height="145" alt="image" src="https://github.com/user-attachments/assets/3031228b-a68b-4927-b9db-dc2f96a7b6a3" />
-
 ### Test the API Gateway (Kong)
 Test if the external ingress is routing traffic to the REST API.
 
