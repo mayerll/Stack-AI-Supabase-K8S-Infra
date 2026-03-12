@@ -226,6 +226,9 @@ $ kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
 
 <img width="1957" height="965" alt="image" src="https://github.com/user-attachments/assets/03f49bd1-9219-4f26-81ce-681c1513c023" />
 
+
+<img width="1963" height="544" alt="image" src="https://github.com/user-attachments/assets/d77a1069-8db9-4f3d-915a-717524aa60b4" />
+
 Follow these steps to ensure the database, API gateway, and dashboard are working correctly.
 
 ### Database Connectivity
