@@ -38,8 +38,8 @@ $ aws sts get-caller-identity
 ```bash
 $ aws sts get-caller-identity
  {
-     "UserId": "905921696455",
-     "Account": "905921696455",
+     "UserId": "905921696451",
+     "Account": "905921696451",
      "Arn": "arn:aws:iam::905921696455:root"
  }
 ```
@@ -141,6 +141,12 @@ $ terraform workspace show  # Should display 'prod'
 # Execute deployment using environment-specific variables, for example:
 $ terraform apply -var-file="env/prod.tfvars"
 ```
+Or run the script: 01-setup-infrastructure.sh
+
+```bash
+$ ./01-setup-infrastructure.sh
+```
+
 <img width="822" height="189" alt="bash-5 1# terraform workspace new prod" src="https://github.com/user-attachments/assets/6b10a769-6402-4b9f-9e5c-b178af9a76c3" />
 
 
@@ -184,6 +190,12 @@ $ kubectl get nodes
 
 $ kubectl get pod -A
 
+```
+
+Or run the script: 02-deploy-supabase.sh
+
+```bash
+$ ./02-deploy-supabase.sh
 ```
 
 <img width="1535" height="1009" alt="image" src="https://github.com/user-attachments/assets/8ced9895-60cc-4bb3-8a6a-c476f0419698" />
