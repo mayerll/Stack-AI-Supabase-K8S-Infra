@@ -308,6 +308,8 @@ Visit: http://localhost:8000 and use the credentials (username and password) ret
 #### AWS S3 & Secrets Manager
 This project uses **AWS S3** for file storage and **AWS Secrets Manager** via External Secrets Operator to manage sensitive keys.
 
+<img width="1954" height="435" alt="image" src="https://github.com/user-attachments/assets/6bbcb1a3-bb3a-4b7f-8174-c1ffc7b8c26a" />
+
 #### Network Policies
 Traffic is restricted using Kubernetes NetworkPolicies. Only the Ingress Controller and internal Supabase services can communicate.
 
