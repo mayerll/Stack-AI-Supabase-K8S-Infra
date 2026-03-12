@@ -239,23 +239,6 @@ $ kubectl exec -it -n supabase supabase-supabase-db-0 -- psql -U postgres -c "SE
 ```
 <img width="1492" height="145" alt="image" src="https://github.com/user-attachments/assets/3031228b-a68b-4927-b9db-dc2f96a7b6a3" />
 
-### Retrieve API Credentials
-You need the Anon Key to make authorized API requests and the Dashboard credentials to log in to the UI.
-
-```bash
-# 1. Get the Anon JWT Key
-export ANON_KEY=$(kubectl get secret supabase-jwt -n supabase -o jsonpath='{.data.anonKey}' | base64 --decode)
-
-# 2. Get Studio Login Credentials
-export STUDIO_USER=$(kubectl get secret supabase-dashboard -n supabase -o jsonpath='{.data.username}' | base64 --decode)
-export STUDIO_PASS=$(kubectl get secret supabase-dashboard -n supabase -o jsonpath='{.data.password}' | base64 --decode)
-
-echo "User: $STUDIO_USER | Pass: $STUDIO_PASS"
-
-```
-
-<img width="1612" height="169" alt="image" src="https://github.com/user-attachments/assets/2d1b3d85-2ef3-4fcc-b021-0164caa7c585" />
-
 ### Test the API Gateway (Kong)
 Test if the external ingress is routing traffic to the REST API.
 
@@ -263,16 +246,6 @@ Test if the external ingress is routing traffic to the REST API.
 ```bash
 $ kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
 ```
-### Authenticated API Test
-Run the following to verify the API accepts your `anon` key:
-
-1. **Get the key:**
-```bash
-$ kubectl get secret supabase-jwt -n supabase -o jsonpath='{.data.anonKey}' | base64 --decode
-```
-You will get ANON_KEY key.
-
-<img width="1955" height="84" alt="image" src="https://github.com/user-attachments/assets/dcc31bd2-358d-4a4c-8d77-3549704f769f" />
 
 In a new terminal, run:
 
@@ -310,13 +283,6 @@ $ kubectl port-forward -n supabase svc/supabase-supabase-studio 8000:3000
 
 Visit: http://localhost:8000 and use the credentials (username and password) retrieved.
 
-### Service Endpoint Summary
-
-| Service | Internal Secret | Ingress Host |
-| :--- | :--- | :--- |
-| **PostgreSQL** | `supabase-db` | N/A (Internal Only) |
-| **Auth/API** | `supabase-jwt` | `supabase.local/auth` |
-| **Studio UI** | `supabase-dashboard` | `supabase.local` |
 
 ## 6. Security & Cloud Integration
 
