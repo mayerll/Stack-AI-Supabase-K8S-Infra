@@ -57,7 +57,7 @@ resource "aws_db_instance" "supabase_db" {
   # High Availability & Backup
   # Since 'dev' no longer needs to save cost, we enable Multi-AZ for all envs
   multi_az               = true
-  skip_final_snapshot    = terraform.workspace == "prod" ? false : true
+  skip_final_snapshot    = terraform.workspace == "prod" ? false : true 
   final_snapshot_identifier = "${local.env_prefix}-db-final-snapshot"
   backup_retention_period = 7
 
@@ -74,7 +74,7 @@ resource "aws_db_instance" "supabase_db" {
 
   lifecycle {
     # 1. Prevents 'terraform destroy' from deleting the DB (Professional Safety)
-    prevent_destroy = true 
+    prevent_destroy = true
 
     # 2. Ensures the password doesn't revert if changed via AWS Console/Secrets Manager
     ignore_changes = [password]

@@ -20,7 +20,7 @@ resource "aws_s3_bucket" "storage" {
   # In a professional setup, we keep this TRUE for dev, staging, and prod to prevent 
   # catastrophic data loss.
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = true 
   }
 }
 
@@ -66,5 +66,20 @@ resource "aws_s3_bucket_ownership_controls" "storage_ownership" {
   rule {
     object_ownership = "BucketOwnerEnforced"
   }
+}
+
+
+# 6. S3 Bucket 
+resource "aws_s3_bucket" "supabase_storage" {
+  bucket = "stackai-supabase-storage-bucket-k8s" 
+}
+
+resource "aws_s3_bucket_public_access_block" "supabase_storage_privacy" {
+  bucket = aws_s3_bucket.supabase_storage.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 

@@ -1,9 +1,10 @@
-
 #!/bin/bash
+
 set -e
-cd ../terraform
+cd ./terraform
 terraform init
-terraform apply -auto-approve
+terraform plan 
+terraform apply 
 # Sync EKS credentials
 aws eks update-kubeconfig --name supabase-eks --region us-west-2
 

@@ -97,3 +97,31 @@ resource "aws_iam_role_policy_attachment" "node_AmazonEBSCSIDriverPolicy" {
   role       = aws_iam_role.eks_nodes.name
 }
 
+
+# ==========================================
+# 4. Define the S3 Access Policy
+# ==========================================
+resource "aws_iam_policy" "supabase_s3_policy" {
+  name        = "SupabaseS3Access"
+  description = "Allow Supabase pods to access S3"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["s3:PutObject", "s3:GetObject", "s3:DeleteObject", "s3:ListBucket"]
+        Effect   = "Allow"
+        Resource = [
+          "${aws_s3_bucket.supabase_storage.arn}",
+          "${aws_s3_bucket.supabase_storage.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "s3_attach" {
+  role = aws_iam_role.eks_nodes.name
+  policy_arn = aws_iam_policy.supabase_s3_policy.arn
+}
+

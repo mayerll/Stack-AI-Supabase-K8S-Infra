@@ -1,42 +1,119 @@
 
-# 1. Database Configuration
-# Re-enable the internal Postgres pod since it is already Bound to gp3
+# 1. Disable Database (Internal Postgres with gp3 Storage)
 postgresql:
-  enabled: true
+  enabled: false
   persistence:
     enabled: true
     storageClass: "gp3"
     size: 5Gi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
 
-# Link to the secret we found earlier
+# Database Link (Linked to AWS Secrets Manager via ExternalSecret)
 db:
+  host: "prod-stackai-supabase-db.c3cqiieqif31.us-west-2.rds.amazonaws.com" # Need to modify for dev staging envs.
   existingSecret: "supabase-db"
   secretKey: "password"
   database: "postgres"
   port: 5432
 
-# 2. Studio Configuration (Fixes the "API Error")
+# 2. Studio (Dashboard) Configuration
 studio:
   enabled: true
-  # The URL your browser uses
   publicUrl: "http://supabase.local"
-  # The INTERNAL URL the Studio pod uses to talk to the API gateway
   apiUrl: "http://supabase-supabase-kong:8000"
   existingSecret: "supabase-dashboard"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  # Autoscaling for Dashboard
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
 
-# 3. Auth & JWT (Required for generating API Keys)
+# 3. Auth & JWT (Keys synced from AWS Secrets Manager)
 auth:
   jwt:
     existingSecret: "supabase-jwt"
     secretKey: "secret"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
 
-# 4. API Gateway (Kong)
+# 4. Object Storage (Switching from MinIO to AWS S3)
+storage:
+  enabled: true
+  image:
+    repository: supabase/storage-api
+    tag: v0.43.12
+  environment:
+    STORAGE_BACKEND: s3
+    GLOBAL_S3_BUCKET: "stackai-supabase-storage-prod-us-west-2" # Need to modify for dev staging envs.
+    REGION: "us-west-2"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  # Autoscaling for Storage API
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+
+# Disable internal MinIO to force AWS S3 usage
+minio:
+  enabled: false
+
+# 5. REST API (PostgREST) Scaling
+postgrest:
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  # Autoscaling for API traffic
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+
+# 6. Realtime (Websockets) Scaling
+realtime:
+  enabled: true
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+
+# 7. API Gateway (Kong)
 kong:
   enabled: true
   contentLength:
     enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
 
-# 5. Ingress Configuration
+# 8. Ingress Configuration
 ingress:
   enabled: true
   className: "nginx"
@@ -49,11 +126,9 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
 
-# 6. Scaling (Based on your previous file)
-postgrest:
-  replicaCount: 2
-  resources:
-    limits:
-      cpu: 500m
-      memory: 512Mi
+# 9. Security & Governance
+# Restrict traffic between pods
+networkPolicies:
+  enabled: true
+
 

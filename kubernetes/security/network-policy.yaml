@@ -1,0 +1,16 @@
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: supabase-internal-only
+  namespace: supabase
+spec:
+  podSelector: {} # Apply to all pods in namespace
+  ingress:
+  - from:
+    - podSelector: {} # Allow pods in the same namespace to talk
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: ingress-nginx # Allow Ingress traffic
+

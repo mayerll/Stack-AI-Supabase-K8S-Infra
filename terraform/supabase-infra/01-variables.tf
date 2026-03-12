@@ -17,6 +17,7 @@ variable "region" {
 variable "aws_account_id" {
   description = "The 12-digit AWS account ID required for IAM principal ARNs and EKS access entries."
   type        = string
+  default     = "905921696455" # <--- Added Default
 }
 
 # ==========================================
@@ -40,12 +41,14 @@ variable "postgres_version" {
 variable "db_instance_class" {
   description = "The compute instance type for the RDS database (e.g., db.t3.medium)."
   type        = string
+  default     = "db.t3.medium" 
 }
 
 variable "db_password" {
   description = "The master password for the PostgreSQL database. This is marked as sensitive."
   type        = string
   sensitive   = true
+  default     = "REPLACE_IT"  
 }
 
 variable "db_storage" {
@@ -66,6 +69,7 @@ variable "eks_version" {
 variable "eks_instance_type" {
   description = "The EC2 instance type for the EKS managed node group (e.g., t3.medium)."
   type        = string
+  default     = "t3.medium" # <--- Added Default
 }
 
 variable "eks_desired_size" {
@@ -84,5 +88,33 @@ variable "eks_max_size" {
   description = "The maximum number of worker nodes for the auto-scaling group."
   type        = number
   default     = 5
+}
+
+variable "eks_node_role_name" {
+  description = "The name of the IAM role for the EKS worker nodes"
+  type        = string
+  default     = "stackai-supabase-node-role" 
+}
+
+# ==========================================
+# 5. Secrets Manager
+# ==========================================
+
+variable "secret_name" {
+  description = "Name of the secret in AWS Secrets Manager"
+  type        = string
+  default     = "supabase-db-credentials"
+}
+
+variable "secret_description" {
+  description = "Description of the secret"
+  type        = string
+  default     = "Supabase database credentials"
+}
+
+variable "db_username" {
+  description = "Database username"
+  type        = string
+  default     = "postgres"
 }
 
