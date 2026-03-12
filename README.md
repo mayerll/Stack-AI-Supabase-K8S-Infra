@@ -499,6 +499,45 @@ Autoscaling decisions are observable through:
 These metrics allow operators to validate scaling behavior under load.
 
 ---
+### Conclusion on Architecture & High Availability (HA) Design
+
+This deployment uses a modular architecture based on Kubernetes and Helm to run Supabase components securely and with high availability. The main design principles are:
+
+#### Modular Component Design
+Each Supabase service runs in its own Kubernetes deployment, service, and service account:
+
+- **Auth** – Handles authentication.
+- **DB** –  Database managed as a StatefulSet with persistent storage.
+- **Realtime** – Realtime subscriptions service.
+- **REST / Functions** – Exposes APIs and serverless functions.
+- **Storage / MinIO** – Object storage backend.
+- **Analytics, Meta, Studio, Kong, Imgproxy, Vector** – Supporting microservices for observability, gateway, and media processing.
+
+Each component has its own Helm templates for deployment, service, service account, and configuration, allowing independent scaling and upgrades.
+
+#### High Availability (HA)
+- **Database (PostgreSQL)** – Managed as a StatefulSet with multiple replicas and persistent volume claims (PVCs) for data durability.
+- **API & Realtime Services** – Deployed with multiple replicas and Kubernetes `Service` for load balancing.
+- **Stateless Services** – Can be horizontally scaled across nodes for HA.
+- **Secrets Management** – All sensitive data (DB passwords, JWT secrets, SMTP, S3 keys) is stored in **AWS Secrets Manager** and injected into Kubernetes via Terraform and Helm, avoiding hardcoded credentials.
+
+#### Environment & Workspace Isolation
+- Deployment environment (`dev`, `staging`, `prod`) is derived from Terraform workspace.
+- Secrets and resource names include workspace prefix to ensure environment isolation and prevent conflicts.
+
+#### CI/CD Integration
+- Terraform manages cloud resources (Secrets Manager, optionally Kubernetes resources).
+- Helm deploys Supabase components in Kubernetes, reading secrets and configuration from `values.yaml`.
+- CI pipelines can trigger Helm upgrades, run smoke tests, and verify component readiness.
+
+#### HA Practices
+- Use Kubernetes `HorizontalPodAutoscaler` for stateless services to handle traffic spikes.
+- Enable persistent volume replication or backup strategies for PostgreSQL.
+- Use multi-AZ Kubernetes clusters to tolerate node or zone failures.
+- Regularly rotate secrets stored in AWS Secrets Manager for security.
+
+> This architecture ensures that each Supabase component is independently scalable, fault-tolerant, and securely configured, providing a robust foundation for production-grade deployments.
+
 
 ### Future Improvements
 
