@@ -149,6 +149,7 @@ $ ./01-setup-infrastructure.sh
 
 <img width="822" height="189" alt="bash-5 1# terraform workspace new prod" src="https://github.com/user-attachments/assets/6b10a769-6402-4b9f-9e5c-b178af9a76c3" />
 
+<img width="1611" height="561" alt="image" src="https://github.com/user-attachments/assets/27a8bbca-f593-4b08-93c9-df36e279a9c4" />
 
 ## 4. Output and Connectivity
 
