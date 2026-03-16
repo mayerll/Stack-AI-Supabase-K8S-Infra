@@ -46,6 +46,8 @@ echo "Waiting for ExternalSecrets CRDs..."
 kubectl wait --for=condition=established --timeout=60s crd/secretstores.external-secrets.io
 kubectl wait --for=condition=established --timeout=60s crd/externalsecrets.external-secrets.io
 
+sleep 600
+
 # --- 4. Apply AWS SecretStore / ExternalSecrets ---
 echo "Step 4: Apply SecretStore and ExternalSecrets"
 kubectl apply -f kubernetes/operators/aws-secret-store.yaml
