@@ -19,7 +19,7 @@ This project follows a branch-driven deployment strategy. Pushing code to the fo
 
 ## 1. Pre-deployment Checks
 
-Ensure your local environment is authenticated with the correct AWS Account (905921696455).
+Ensure your local environment is authenticated with the correct AWS Account (e.g. : 905921696451).
 
 ```bash
 # Check current AWS credentials
