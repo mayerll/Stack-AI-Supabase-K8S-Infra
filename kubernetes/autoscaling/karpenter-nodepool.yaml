@@ -1,5 +1,4 @@
 
-# ../kubernetes/autoscaling/karpenter-nodepool.yaml
 apiVersion: karpenter.sh/v1beta1
 kind: NodePool
 metadata:
