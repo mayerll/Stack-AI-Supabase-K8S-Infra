@@ -2,6 +2,12 @@
 
 A professional Infrastructure as Code (IaC) project using Terraform to deploy a highly available Supabase-style stack on AWS (us-west-2).
 
+## Architecture 
+
+<img width="1166" height="713" alt="image" src="https://github.com/user-attachments/assets/51efec48-7ef9-4307-850c-0787b716fa04" />
+
+<img width="1008" height="456" alt="image" src="https://github.com/user-attachments/assets/e6284317-0dfa-4b29-a772-9e75359802d8" />
+
 
 ## 0. Deployment Environment
 
@@ -557,8 +563,6 @@ Future enhancements to observability could include:
 
 These improvements would further enhance system reliability and operational visibility.
 
-## Architecture 
 
-<img width="1166" height="713" alt="image" src="https://github.com/user-attachments/assets/51efec48-7ef9-4307-850c-0787b716fa04" />
 
 
