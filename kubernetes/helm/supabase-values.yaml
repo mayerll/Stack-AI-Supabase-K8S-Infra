@@ -16,9 +16,10 @@ postgresql:
 
 # Database Link (Linked to AWS Secrets Manager via ExternalSecret)
 db:
-  host: "prod-stackai-supabase-db.c3cqiieqif31.us-west-2.rds.amazonaws.com" # Need to modify for dev staging envs.
+  host: "prod-stackai-supabase-db.cluster-c3cqiieqif31.us-west-2.rds.amazonaws.com" # Need to modify for dev staging envs.
   existingSecret: "supabase-db"
-  secretKey: "password"
+  userKey: "username"      # <--- Add this to map the 'username' key from the secret
+  secretKey: "password"    # <--- This maps the 'password' key from the secret
   database: "postgres"
   port: 5432
 
