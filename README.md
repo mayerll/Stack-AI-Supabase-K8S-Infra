@@ -522,6 +522,9 @@ Each component has its own Helm templates for deployment, service, service accou
 - **API & Realtime Services** – Deployed with multiple replicas and Kubernetes `Service` for load balancing.
 - **Stateless Services** – Can be horizontally scaled across nodes for HA.
 - **Secrets Management** – All sensitive data (DB passwords, JWT secrets, SMTP, S3 keys) is stored in **AWS Secrets Manager** and injected into Kubernetes via Terraform and Helm, avoiding hardcoded credentials.
+e.g.:
+
+<img width="1797" height="312" alt="image" src="https://github.com/user-attachments/assets/30ae3c27-2903-4cfe-a7c5-e9a470522e33" />
 
 #### Environment & Workspace Isolation
 - Deployment environment (`dev`, `staging`, `prod`) is derived from Terraform workspace.
