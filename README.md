@@ -557,46 +557,8 @@ Future enhancements to observability could include:
 
 These improvements would further enhance system reliability and operational visibility.
 
-graph TD
-    subgraph "External Traffic"
-        User((User)) --> ALB[AWS Load Balancer]
-    end
+## Architecture 
 
-    subgraph "AWS Cloud (VPC)"
-        subgraph "Public Subnets"
-            ALB --> Nginx[NGINX Ingress Controller]
-        end
+<img width="1166" height="713" alt="image" src="https://github.com/user-attachments/assets/51efec48-7ef9-4307-850c-0787b716fa04" />
 
-        subgraph "Private Subnets (EKS Cluster)"
-            subgraph "Namespace: external-secrets"
-                ESO[External Secrets Operator]
-            end
-
-            subgraph "Namespace: supabase"
-                Nginx --> Kong[Kong API Gateway]
-                Kong --> Studio[Supabase Studio]
-                Kong --> GoTrue[GoTrue / Auth]
-                Kong --> PostgREST[PostgREST / API]
-                
-                Studio -.-> PVC1[(EBS: snippets)]
-                GoTrue -.-> RDS
-            end
-        end
-
-        subgraph "Managed Data Services"
-            RDS[(Amazon RDS - Postgres)]
-            S3[(Amazon S3 - Storage)]
-            SM[AWS Secrets Manager]
-        end
-    end
-
-    %% Provisioning & Secret Flow
-    TF[Terraform] -- Provision --> VPC
-    TF -- Provision --> EKS
-    TF -- Provision --> RDS
-    TF -- Provision --> SM
-    
-    SM -- Syncs via ESO --> K8sSecrets[Kubernetes Secrets]
-    K8sSecrets --> GoTrue
-    K8sSecrets --> Studio
 
