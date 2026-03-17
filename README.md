@@ -552,3 +552,47 @@ Future enhancements to observability could include:
 * End-to-end request tracing across Supabase services
 
 These improvements would further enhance system reliability and operational visibility.
+
+graph TD
+    subgraph "External Traffic"
+        User((User)) --> ALB[AWS Load Balancer]
+    end
+
+    subgraph "AWS Cloud (VPC)"
+        subgraph "Public Subnets"
+            ALB --> Nginx[NGINX Ingress Controller]
+        end
+
+        subgraph "Private Subnets (EKS Cluster)"
+            subgraph "Namespace: external-secrets"
+                ESO[External Secrets Operator]
+            end
+
+            subgraph "Namespace: supabase"
+                Nginx --> Kong[Kong API Gateway]
+                Kong --> Studio[Supabase Studio]
+                Kong --> GoTrue[GoTrue / Auth]
+                Kong --> PostgREST[PostgREST / API]
+                
+                Studio -.-> PVC1[(EBS: snippets)]
+                GoTrue -.-> RDS
+            end
+        end
+
+        subgraph "Managed Data Services"
+            RDS[(Amazon RDS - Postgres)]
+            S3[(Amazon S3 - Storage)]
+            SM[AWS Secrets Manager]
+        end
+    end
+
+    %% Provisioning & Secret Flow
+    TF[Terraform] -- Provision --> VPC
+    TF -- Provision --> EKS
+    TF -- Provision --> RDS
+    TF -- Provision --> SM
+    
+    SM -- Syncs via ESO --> K8sSecrets[Kubernetes Secrets]
+    K8sSecrets --> GoTrue
+    K8sSecrets --> Studio
+
