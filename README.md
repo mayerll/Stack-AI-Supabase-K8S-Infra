@@ -555,11 +555,11 @@ e.g.:
 
 Future enhancements to observability could include:
 
-* Distributed tracing using OpenTelemetry
 * Service-level monitoring using Grafana Tempo
-* Log aggregation using Loki
+* Security Scan 
 * Synthetic health checks for Supabase endpoints
 * End-to-end request tracing across Supabase services
+* Discussion on the ALB and DNS to provide svc to external users.
 
 These improvements would further enhance system reliability and operational visibility.
 
