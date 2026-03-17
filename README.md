@@ -198,9 +198,9 @@ Or run the script: 02-deploy-supabase.sh
 ```bash
 $ ./02-deploy-supabase.sh
 ```
-
-<img width="1535" height="1009" alt="image" src="https://github.com/user-attachments/assets/8ced9895-60cc-4bb3-8a6a-c476f0419698" />
 <img width="1316" height="177" alt="image" src="https://github.com/user-attachments/assets/73607423-92ab-4510-8858-609a520ec261" />
+<img width="1535" height="1009" alt="image" src="https://github.com/user-attachments/assets/8ced9895-60cc-4bb3-8a6a-c476f0419698" />
+
 
 
 #### Access RDS Database
