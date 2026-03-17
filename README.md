@@ -4,7 +4,10 @@ A professional Infrastructure as Code (IaC) project using Terraform to deploy a 
 
 # Architecture 
 
-<img width="1166" height="713" alt="image" src="https://github.com/user-attachments/assets/51efec48-7ef9-4307-850c-0787b716fa04" />
+<img width="1124" height="702" alt="image" src="https://github.com/user-attachments/assets/695dc7ac-2915-4cab-9261-d32d1505138e" />
+
+
+#### Supabase Architecture:
 
 <img width="1008" height="456" alt="image" src="https://github.com/user-attachments/assets/e6284317-0dfa-4b29-a772-9e75359802d8" />
 
