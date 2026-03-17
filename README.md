@@ -244,6 +244,7 @@ $ kubectl port-forward -n supabase svc/supabase-supabase-kong 8443:8000
 In a new terminal, run:
 
 ```bash
+$ kubectl get secret supabase-jwt -n supabase -o yaml
 $ curl -i -H "apikey: $ANON_KEY" -H "Authorization: Bearer $ANON_KEY" http://localhost:8443/rest/v1/
 
 ```
