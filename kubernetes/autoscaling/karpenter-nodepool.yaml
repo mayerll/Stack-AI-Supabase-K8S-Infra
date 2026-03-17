@@ -13,7 +13,7 @@ spec:
           values: ["spot", "on-demand"]
         - key: "kubernetes.io/arch"
           operator: In
-          values: ["amd64"]
+          values: ["x86"]
       nodeClassRef:
         name: default
   limits:
