@@ -2,7 +2,7 @@
 
 A professional Infrastructure as Code (IaC) project using Terraform to deploy a highly available Supabase-style stack on AWS (us-west-2).
 
-## Architecture 
+# Architecture 
 
 <img width="1166" height="713" alt="image" src="https://github.com/user-attachments/assets/51efec48-7ef9-4307-850c-0787b716fa04" />
 
